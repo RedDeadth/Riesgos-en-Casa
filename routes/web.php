@@ -6,7 +6,7 @@ use App\Http\Controllers\AdminDashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('survey.index');
 });
 
 Route::get('/encuesta', [SurveyController::class, 'index'])->name('survey.index');
