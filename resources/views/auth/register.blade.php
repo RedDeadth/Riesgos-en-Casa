@@ -44,7 +44,7 @@
 						</div>
 						<div>
 							<p class="text-white font-semibold text-sm">Métricas Detalladas</p>
-							<p class="text-blue-200/60 text-xs mt-0.5">Análisis completo por categoría</p>
+							<p class="text-white text-xs mt-0.5">Análisis completo por categoría</p>
 						</div>
 					</div>
 
@@ -56,7 +56,7 @@
 						</div>
 						<div>
 							<p class="text-white font-semibold text-sm">Evaluación Integral</p>
-							<p class="text-blue-200/60 text-xs mt-0.5">7 categorías de riesgo</p>
+							<p class="text-white text-xs mt-0.5">7 categorías de riesgo</p>
 						</div>
 					</div>
 
@@ -68,21 +68,10 @@
 						</div>
 						<div>
 							<p class="text-white font-semibold text-sm">Seguimiento Continuo</p>
-							<p class="text-blue-200/60 text-xs mt-0.5">Monitorea tu progreso</p>
+							<p class="text-white text-xs mt-0.5">Monitorea tu progreso</p>
 						</div>
 					</div>
 
-					<div class="flex items-start gap-3">
-						<div class="w-10 h-10 bg-amber-500/20 rounded-lg flex items-center justify-center flex-shrink-0 border border-amber-400/20">
-							<svg class="w-5 h-5 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
-							</svg>
-						</div>
-						<div>
-							<p class="text-white font-semibold text-sm">Plan de Mejora</p>
-							<p class="text-blue-200/60 text-xs mt-0.5">Recomendaciones personalizadas</p>
-						</div>
-					</div>
 				</div>
 			</div>
 
@@ -102,10 +91,12 @@
 			<div class="w-full max-w-md mx-auto relative z-10">
 				<!-- Header (Mobile Only) -->
 				<div class="lg:hidden text-center mb-10">
-					<div class="w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg border border-teal-400/30">
-						<svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+					<div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg border border-blue-400/30">
+						<svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+						</svg>
 					</div>
-					<h2 class="text-2xl font-extrabold text-gray-900">Registro Admin</h2>
+					<h2 class="text-2xl font-extrabold text-gray-900">Crear Cuenta</h2>
 				</div>
 
 				<div class="auth-card">
@@ -179,9 +170,11 @@
 
 						<div class="pt-2">
 							<!-- Botón de Envío -->
-							<button type="submit" class="btn-success w-full shadow-lg shadow-emerald-500/20 group">
+							<button type="submit" class="btn-primary w-full shadow-lg shadow-blue-500/20 group">
 								Registrarme
-								<svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/></svg>
+								<svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+								</svg>
 							</button>
 						</div>
 					</form>
@@ -189,7 +182,7 @@
 					<!-- Enlace a Login -->
 					<div class="mt-6 text-center text-sm text-gray-500">
 						¿Ya tienes una cuenta?
-						<a href="{{ route('login') }}" class="font-medium text-emerald-600 hover:text-emerald-500 transition-colors">Inicia sesión</a>
+						<a href="{{ route('login') }}" class="font-medium text-blue-600 hover:text-blue-500 transition-colors">Inicia sesión</a>
 					</div>
 				</div>
 				
@@ -239,7 +232,7 @@
 			0 0 0 1px rgba(0, 0, 0, 0.03),
 			0 4px 6px -1px rgba(0, 0, 0, 0.05),
 			0 20px 25px -5px rgba(0, 0, 0, 0.08),
-			0 0 60px -15px rgba(16, 185, 129, 0.08); /* Emerald shadow */
+			0 0 60px -15px rgba(59, 130, 246, 0.08);
 	}
 
 	.auth-label {
@@ -263,19 +256,19 @@
 		box-sizing: border-box;
 	}
 	.auth-input:focus {
-		border-color: #10b981;
-		box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+		border-color: #3b82f6;
+		box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 	}
 	.auth-input::placeholder {
 		color: #9ca3af;
 	}
 
-	.btn-success {
+	.btn-primary {
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		padding: 0.75rem 1.5rem;
-		background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+		background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
 		color: white;
 		font-weight: 600;
 		font-size: 0.95rem;
@@ -284,8 +277,8 @@
 		cursor: pointer;
 		transition: all 0.2s;
 	}
-	.btn-success:hover {
-		background: linear-gradient(135deg, #059669 0%, #047857 100%);
+	.btn-primary:hover {
+		background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
 		transform: translateY(-1px);
 	}
 </style>
