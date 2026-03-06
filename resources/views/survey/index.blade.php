@@ -1,37 +1,67 @@
-<x-guest-layout>
+<x-app-layout>
 <style>
 	[x-cloak] { display: none !important; }
-	.section-title { font-size:1.25rem; font-weight:700; background:#FDE047; display:inline-block; padding:.5rem 1rem; margin-bottom:1.5rem; border-radius:1rem; box-shadow:0 1px 2px rgba(0,0,0,.05); color:#713F12; }
-	.field-label { display:block; font-size:.875rem; font-weight:600; margin-bottom:.5rem; color:#374151; }
-	.cs-input { width:100%; border:1px solid #D1D5DB; border-radius:1rem; padding:.75rem 1rem; box-shadow:0 1px 2px rgba(0,0,0,.05); outline:none; transition:all .2s; }
-	.cs-input:focus { border-color:#3B82F6; box-shadow:0 0 0 3px rgba(59,130,246,.15); }
-	.cs-trigger { width:100%; display:flex; align-items:center; justify-content:space-between; padding:.75rem 1rem; background:#fff; border:1px solid #D1D5DB; border-radius:1rem; box-shadow:0 1px 2px rgba(0,0,0,.05); cursor:pointer; transition:all .2s; text-align:left; font-size:.95rem; }
-	.cs-trigger:hover { border-color:#93C5FD; }
-	.cs-trigger-active { border-color:#3B82F6; box-shadow:0 0 0 3px rgba(59,130,246,.15); border-bottom-left-radius:0; border-bottom-right-radius:0; }
-	.cs-arrow { width:1.25rem; height:1.25rem; color:#9CA3AF; transition:transform .3s cubic-bezier(.4,0,.2,1); flex-shrink:0; }
-	.cs-list { position:absolute; top:100%; left:0; right:0; z-index:50; background:#fff; border:1px solid #3B82F6; border-top:none; border-bottom-left-radius:1rem; border-bottom-right-radius:1rem; box-shadow:0 10px 25px rgba(0,0,0,.1); max-height:0; overflow:hidden; opacity:0; transform:translateY(-4px); transition:max-height .35s cubic-bezier(.4,0,.2,1),opacity .25s ease,transform .25s ease; }
+	.section-title { font-size:1.1rem; font-weight:800; background:linear-gradient(135deg, #3B82F6 0%, #2563EB 100%); display:inline-block; padding:.6rem 1.5rem; margin-bottom:1.5rem; border-radius:1rem; box-shadow:0 4px 6px rgba(59,130,246,.2); color:#fff; text-transform:uppercase; letter-spacing:0.05em; }
+	.field-label { display:block; font-size:.75rem; font-weight:700; margin-bottom:.5rem; color:#64748B; text-transform:uppercase; letter-spacing:0.05em; }
+	.cs-input { width:100%; border:1px solid #E2E8F0; border-radius:1rem; padding:.75rem 1rem; box-shadow:0 1px 3px rgba(0,0,0,.05); outline:none; transition:all .2s; background:#fff; }
+	.cs-input:focus { border-color:#3B82F6; box-shadow:0 0 0 3px rgba(59,130,246,.1); }
+	.cs-trigger { width:100%; display:flex; align-items:center; justify-content:space-between; padding:.75rem 1rem; background:#fff; border:1px solid #E2E8F0; border-radius:1rem; box-shadow:0 1px 3px rgba(0,0,0,.05); cursor:pointer; transition:all .2s; text-align:left; font-size:.95rem; }
+	.cs-trigger:hover { border-color:#93C5FD; background:#F8FAFC; }
+	.cs-trigger-active { border-color:#3B82F6; box-shadow:0 0 0 3px rgba(59,130,246,.1); border-bottom-left-radius:0; border-bottom-right-radius:0; background:#EFF6FF; }
+	.cs-arrow { width:1.25rem; height:1.25rem; color:#94A3B8; transition:transform .3s cubic-bezier(.4,0,.2,1); flex-shrink:0; }
+	.cs-list { position:absolute; top:100%; left:0; right:0; z-index:50; background:#fff; border:1px solid #3B82F6; border-top:none; border-bottom-left-radius:1rem; border-bottom-right-radius:1rem; box-shadow:0 10px 25px rgba(59,130,246,.15); max-height:0; overflow:hidden; opacity:0; transform:translateY(-4px); transition:max-height .35s cubic-bezier(.4,0,.2,1),opacity .25s ease,transform .25s ease; }
 	.cs-list-open { max-height:300px; opacity:1; transform:translateY(0); overflow-y:auto; }
-	.cs-option { padding:.7rem 1rem; cursor:pointer; transition:background .15s; font-size:.95rem; border-bottom:1px solid #f1f5f9; }
+	.cs-option { padding:.7rem 1rem; cursor:pointer; transition:background .15s; font-size:.95rem; border-bottom:1px solid #F1F5F9; }
 	.cs-option:last-child { border-bottom:none; }
-	.cs-option:hover { background:#EFF6FF; color:#1D4ED8; }
-	.risk-btn { display:flex; flex-direction:column; align-items:center; gap:2px; padding:.4rem .6rem; border:2px solid #e5e7eb; border-radius:.75rem; cursor:pointer; transition:all .2s; min-width:3.5rem; text-align:center; background:#fff; }
-	.risk-btn:hover { border-color:#93C5FD; }
+	.cs-option:hover { background:#EFF6FF; color:#2563EB; font-weight:600; }
+	.risk-btn { display:flex; flex-direction:column; align-items:center; gap:2px; padding:.4rem .6rem; border:2px solid #E2E8F0; border-radius:.75rem; cursor:pointer; transition:all .2s; min-width:3.5rem; text-align:center; background:#fff; }
+	.risk-btn:hover { border-color:#93C5FD; background:#F8FAFC; }
 </style>
 
-	<main class="max-w-4xl mx-auto py-10 px-6">
-		<div class="flex justify-between items-center mb-10">
-			<h1 class="text-3xl font-extrabold text-blue-700 tracking-tight">Encuesta sobre la vivienda</h1>
-			<span class="text-gray-600 bg-gray-100 px-4 py-2 rounded-full text-sm font-semibold" id="welcome-name">Bienvenido</span>
-			<a href="{{ route('admin.dashboard') }}" class="text-white bg-blue-500 px-4 py-2 rounded-full text-sm font-semibold ml-2">Admin Dashboard</a>
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50">
+	<main class="max-w-5xl mx-auto py-10 px-6">
+		<!-- Header -->
+		<div class="mb-8">
+			@if(session('error'))
+			<div class="mb-6 bg-red-50 border-2 border-red-200 text-red-700 px-6 py-4 rounded-2xl">
+				<div class="flex items-center gap-3">
+					<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+					</svg>
+					<span class="font-bold">{{ session('error') }}</span>
+				</div>
+			</div>
+			@endif
+
+			@if(session('success'))
+			<div class="mb-6 bg-green-50 border-2 border-green-200 text-green-700 px-6 py-4 rounded-2xl">
+				<div class="flex items-center gap-3">
+					<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+					</svg>
+					<span class="font-bold">{{ session('success') }}</span>
+				</div>
+			</div>
+			@endif
+
+			<div class="flex items-center gap-3 mb-3">
+				<div class="bg-blue-100 p-2 rounded-xl">
+					<svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+					</svg>
+				</div>
+				<h1 class="text-3xl font-black text-gray-800 tracking-tight">Evaluación de Riesgos en el Hogar</h1>
+			</div>
+			<p class="text-sm text-gray-600 ml-14">Complete todos los campos para obtener un análisis detallado de los riesgos en su vivienda</p>
 		</div>
 		
-		<form id="inspection-form" action="{{ route('survey.store') }}" method="POST" class="bg-white shadow-2xl rounded-3xl p-8 border border-gray-100" x-data="formData()" @submit.prevent="submitForm()">
+		<form id="inspection-form" action="{{ route('survey.store') }}" method="POST" class="bg-white shadow-2xl rounded-[2.5rem] p-8 border border-blue-100" x-data="formData()" @submit.prevent="submitForm()">
             @csrf
 			<input type="hidden" name="inspector_nombre" :value="userName" />
 			<input type="hidden" name="inspector_email" :value="userEmail" />
 
 			<!-- ===== SECTION 1: Registro ===== -->
-			<div class="mb-10 border-b pb-8">
+			<div class="mb-10 pb-8 border-b border-blue-100">
 				<h2 class="section-title">1. Registro</h2>
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 					<div>
@@ -79,15 +109,15 @@
 					</div>
 					<div>
 						<label class="field-label">1.5 País</label>
-						<input type="text" name="pais" x-model="pais" required class="cs-input" placeholder="Ej: Perú"/>
+						<input type="text" name="pais" x-model="pais" required class="cs-input" placeholder="Ej: Perú" @input="checkPeru()"/>
 					</div>
-					<div :class="pais.toLowerCase().trim()!=='perú'&&pais.toLowerCase().trim()!=='peru'?'opacity-50':''">
+					<div :class="!isPeru?'opacity-50':''">
 						<label class="field-label">1.6 Región</label>
-						<input type="text" name="region" class="cs-input" :required="pais.toLowerCase().trim()==='perú'||pais.toLowerCase().trim()==='peru'"/>
+						<input type="text" name="region" x-model="region" class="cs-input" :required="isPeru" :disabled="!isPeru" placeholder="Ej: Lima"/>
 					</div>
-					<div :class="pais.toLowerCase().trim()!=='perú'&&pais.toLowerCase().trim()!=='peru'?'opacity-50':''">
+					<div :class="!isPeru?'opacity-50':''">
 						<label class="field-label">1.7 Provincia</label>
-						<input type="text" name="provincia" class="cs-input" :required="pais.toLowerCase().trim()==='perú'||pais.toLowerCase().trim()==='peru'"/>
+						<input type="text" name="provincia" x-model="provincia" class="cs-input" :required="isPeru" :disabled="!isPeru" placeholder="Ej: Lima"/>
 					</div>
 					<div>
 						<label class="field-label">1.8 Grado de estudios concluida</label>
@@ -106,19 +136,27 @@
 			</div>
 
 			<!-- ===== SECTION 2: Autoevaluación ===== -->
-			<div class="mb-10 border-b pb-8">
+			<div class="mb-10 pb-8 border-b border-blue-100">
 				<h2 class="section-title">2. Autoevaluación</h2>
-				<p class="text-sm text-gray-500 mb-6">Responda cada pregunta con: <strong>0</strong> = No existe el riesgo · <strong>1</strong> = Riesgo leve · <strong>2</strong> = Riesgo moderado · <strong>3</strong> = Riesgo alto</p>
+				<p class="text-sm text-gray-600 mb-6 bg-blue-50 p-4 rounded-xl border border-blue-100">
+					<strong class="text-blue-700">Instrucciones:</strong> Responda cada pregunta con: 
+					<span class="inline-flex items-center gap-1 ml-2">
+						<span class="px-2 py-1 bg-green-100 text-green-700 rounded-lg text-xs font-bold">0 = No existe</span>
+						<span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-lg text-xs font-bold">1 = Leve</span>
+						<span class="px-2 py-1 bg-orange-100 text-orange-700 rounded-lg text-xs font-bold">2 = Moderado</span>
+						<span class="px-2 py-1 bg-red-100 text-red-700 rounded-lg text-xs font-bold">3 = Alto</span>
+					</span>
+				</p>
 
 				<template x-for="(sec, si) in sections" :key="si">
-					<div class="mb-8">
+					<div class="mb-8 bg-gradient-to-br from-gray-50 to-white p-6 rounded-2xl border border-gray-200 shadow-sm">
 						<div class="flex items-center gap-3 mb-4">
-							<h3 class="text-lg font-bold text-gray-800" x-text="'2.'+(si+1)+' '+sec.title"></h3>
-							<span class="text-xs font-bold px-3 py-1 rounded-full" :class="sectionScore(si)>sec.threshold?'bg-red-100 text-red-700':'bg-green-100 text-green-700'" x-text="'Puntaje: '+sectionScore(si)+'/'+sec.questions.length*3"></span>
+							<h3 class="text-lg font-black text-gray-800" x-text="'2.'+(si+1)+' '+sec.title"></h3>
+							<span class="text-xs font-black px-3 py-1.5 rounded-full" :class="sectionScore(si)>sec.threshold?'bg-red-100 text-red-700 border border-red-200':'bg-green-100 text-green-700 border border-green-200'" x-text="'Puntaje: '+sectionScore(si)+'/'+sec.questions.length*3"></span>
 						</div>
 						<div class="space-y-3">
 							<template x-for="(q, qi) in sec.questions" :key="qi">
-								<div class="bg-gray-50 p-4 rounded-2xl border border-gray-200 flex flex-col md:flex-row md:items-center gap-3">
+								<div class="bg-white p-4 rounded-xl border border-gray-200 flex flex-col md:flex-row md:items-center gap-3 hover:border-blue-300 transition-colors">
 									<p class="flex-1 text-sm font-medium text-gray-700" x-text="'2.'+(si+1)+'.'+(qi+1)+' '+q"></p>
 									<div class="relative shrink-0 w-52">
 										<button type="button" @click="openRiskDd = openRiskDd===si+'_'+qi ? null : si+'_'+qi" class="cs-trigger text-sm" :class="openRiskDd===si+'_'+qi&&'cs-trigger-active'">
@@ -137,7 +175,7 @@
 								</div>
 							</template>
 						</div>
-						<div class="mt-3 p-3 rounded-xl text-sm font-semibold" :class="sectionScore(si)>sec.threshold?'bg-red-50 text-red-700 border border-red-200':'bg-green-50 text-green-700 border border-green-200'">
+						<div class="mt-4 p-4 rounded-xl text-sm font-bold border-2" :class="sectionScore(si)>sec.threshold?'bg-red-50 text-red-700 border-red-200':'bg-green-50 text-green-700 border-green-200'">
 							<span x-text="'Resultado: '+sectionScore(si)+' puntos — '+(sectionScore(si)>sec.threshold?sec.warning:'Nivel aceptable')"></span>
 						</div>
 					</div>
@@ -147,17 +185,29 @@
 			<!-- ===== SECTION 3: Interpretación Final ===== -->
 			<div class="mb-10">
 				<h2 class="section-title">3. Interpretación Final</h2>
-				<div class="bg-gray-50 p-6 rounded-3xl border border-gray-200 space-y-4">
+				<div class="bg-gradient-to-br from-blue-50 to-white p-8 rounded-[2rem] border-2 border-blue-200 shadow-lg space-y-4">
 					<div class="text-center">
-						<p class="text-5xl font-black" :class="totalColor" x-text="totalScore()"></p>
-						<p class="text-lg font-bold mt-1" :class="totalColor" x-text="riskLevel()"></p>
-						<p class="text-sm text-gray-500 mt-1" x-text="riskDiagnosis()"></p>
+						<p class="text-6xl font-black mb-2" :class="totalColor" x-text="totalScore()"></p>
+						<p class="text-xl font-black mb-1" :class="totalColor" x-text="riskLevel()"></p>
+						<p class="text-sm text-gray-600 font-medium mt-2" x-text="riskDiagnosis()"></p>
 					</div>
-					<div class="grid grid-cols-4 gap-2 text-center text-xs mt-4">
-						<div class="p-2 rounded-xl" :class="totalScore()<=20?'bg-green-200 font-bold':'bg-green-50'">0-20<br/>Bajo</div>
-						<div class="p-2 rounded-xl" :class="totalScore()>20&&totalScore()<=40?'bg-yellow-200 font-bold':'bg-yellow-50'">21-40<br/>Moderado</div>
-						<div class="p-2 rounded-xl" :class="totalScore()>40&&totalScore()<=70?'bg-orange-200 font-bold':'bg-orange-50'">41-70<br/>Alto</div>
-						<div class="p-2 rounded-xl" :class="totalScore()>70?'bg-red-200 font-bold':'bg-red-50'">71-105<br/>Crítico</div>
+					<div class="grid grid-cols-4 gap-3 text-center text-xs mt-6">
+						<div class="p-3 rounded-xl border-2 transition-all" :class="totalScore()<=20?'bg-green-100 border-green-300 font-black scale-105':'bg-green-50 border-green-200'">
+							<div class="text-2xl font-black text-green-600 mb-1">0-20</div>
+							<div class="font-bold text-green-700">Bajo</div>
+						</div>
+						<div class="p-3 rounded-xl border-2 transition-all" :class="totalScore()>20&&totalScore()<=40?'bg-yellow-100 border-yellow-300 font-black scale-105':'bg-yellow-50 border-yellow-200'">
+							<div class="text-2xl font-black text-yellow-600 mb-1">21-40</div>
+							<div class="font-bold text-yellow-700">Moderado</div>
+						</div>
+						<div class="p-3 rounded-xl border-2 transition-all" :class="totalScore()>40&&totalScore()<=70?'bg-orange-100 border-orange-300 font-black scale-105':'bg-orange-50 border-orange-200'">
+							<div class="text-2xl font-black text-orange-600 mb-1">41-70</div>
+							<div class="font-bold text-orange-700">Alto</div>
+						</div>
+						<div class="p-3 rounded-xl border-2 transition-all" :class="totalScore()>70?'bg-red-100 border-red-300 font-black scale-105':'bg-red-50 border-red-200'">
+							<div class="text-2xl font-black text-red-600 mb-1">71-105</div>
+							<div class="font-bold text-red-700">Crítico</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -171,16 +221,24 @@
 			<input type="hidden" name="respuestas_json" :value="JSON.stringify(answers)"/>
 
 			<div class="text-center mt-12">
-				<button type="submit" class="bg-blue-600 text-white px-10 py-4 rounded-full font-bold text-xl shadow-lg hover:bg-blue-700 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 w-full md:w-auto">Guardar Inspección</button>
+				<button type="submit" class="bg-gradient-to-r from-blue-600 to-blue-500 text-white px-12 py-4 rounded-full font-black text-xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 w-full md:w-auto">
+					<span class="flex items-center justify-center gap-3">
+						<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+						</svg>
+						Guardar Inspección
+					</span>
+				</button>
 			</div>
 		</form>
 	</main>
+</div>
 
 <script>
 window.formData = function() {
 	return {
-		userName: 'Usuario',
-		userEmail: 'correo@ejemplo.com',
+		userName: '{{ Auth::user()->name }}',
+		userEmail: '{{ Auth::user()->email }}',
 
 		// Section 1
 		tipoVivienda:'', tipoViviendaLabel:'Seleccione...',
@@ -188,10 +246,21 @@ window.formData = function() {
 		gradoEstudios:'', gradoEstudiosLabel:'Seleccione...',
 		zonaConstruccion:'', zonaConstruccionLabel:'Seleccione...',
 		pais:'',
+		region:'',
+		provincia:'',
+		isPeru: false,
 		openDd: null,
 		openRiskDd: null,
 		toggleDd(n) { this.openDd = this.openDd===n ? null : n; },
 		sel(f,v,l) { this[f]=v; this[f+'Label']=l; this.openDd=null; },
+		checkPeru() {
+			const paisLower = this.pais.toLowerCase().trim();
+			this.isPeru = paisLower === 'perú' || paisLower === 'peru';
+			if (!this.isPeru) {
+				this.region = '';
+				this.provincia = '';
+			}
+		},
 
 		// Section 2 - Risk options
 		riskOptions: [
@@ -240,11 +309,25 @@ window.formData = function() {
 		},
 		submitForm() {
 			const hasEmpty = this.answers.flat().some(a => a < 0);
-			if(hasEmpty) { alert('Por favor, responda todas las preguntas de la autoevaluación.'); return; }
+			if(hasEmpty) { 
+				alert('Por favor, responda todas las preguntas de la autoevaluación.'); 
+				return; 
+			}
+			
+			console.log('Enviando formulario...');
+			console.log('Datos:', {
+				userName: this.userName,
+				userEmail: this.userEmail,
+				tipoVivienda: this.tipoVivienda,
+				plantas: this.plantas,
+				totalScore: this.totalScore(),
+				nivel_riesgo: this.riskLevel()
+			});
+			
 			const form = document.getElementById('inspection-form');
 			form.submit();
 		}
 	};
 };
 </script>
-</x-guest-layout>
+</x-app-layout>
