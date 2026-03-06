@@ -1,38 +1,250 @@
 <x-guest-layout>
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 text-center">
-                    <h1 class="text-3xl font-bold mb-4">Autoevaluación de Riesgos en Casa</h1>
-                    <p class="mb-6">Por favor, complete el siguiente formulario para evaluar los riesgos de su vivienda. <br> 
-                    *Nota: Esta es una vista generada automáticamente como parte de la estructura. 
-                    El formulario completo de Astro debe ser migrado aquí.*</p>
+<style>
+	[x-cloak] { display: none !important; }
+	.section-title { font-size:1.25rem; font-weight:700; background:#FDE047; display:inline-block; padding:.5rem 1rem; margin-bottom:1.5rem; border-radius:1rem; box-shadow:0 1px 2px rgba(0,0,0,.05); color:#713F12; }
+	.field-label { display:block; font-size:.875rem; font-weight:600; margin-bottom:.5rem; color:#374151; }
+	.cs-input { width:100%; border:1px solid #D1D5DB; border-radius:1rem; padding:.75rem 1rem; box-shadow:0 1px 2px rgba(0,0,0,.05); outline:none; transition:all .2s; }
+	.cs-input:focus { border-color:#3B82F6; box-shadow:0 0 0 3px rgba(59,130,246,.15); }
+	.cs-trigger { width:100%; display:flex; align-items:center; justify-content:space-between; padding:.75rem 1rem; background:#fff; border:1px solid #D1D5DB; border-radius:1rem; box-shadow:0 1px 2px rgba(0,0,0,.05); cursor:pointer; transition:all .2s; text-align:left; font-size:.95rem; }
+	.cs-trigger:hover { border-color:#93C5FD; }
+	.cs-trigger-active { border-color:#3B82F6; box-shadow:0 0 0 3px rgba(59,130,246,.15); border-bottom-left-radius:0; border-bottom-right-radius:0; }
+	.cs-arrow { width:1.25rem; height:1.25rem; color:#9CA3AF; transition:transform .3s cubic-bezier(.4,0,.2,1); flex-shrink:0; }
+	.cs-list { position:absolute; top:100%; left:0; right:0; z-index:50; background:#fff; border:1px solid #3B82F6; border-top:none; border-bottom-left-radius:1rem; border-bottom-right-radius:1rem; box-shadow:0 10px 25px rgba(0,0,0,.1); max-height:0; overflow:hidden; opacity:0; transform:translateY(-4px); transition:max-height .35s cubic-bezier(.4,0,.2,1),opacity .25s ease,transform .25s ease; }
+	.cs-list-open { max-height:300px; opacity:1; transform:translateY(0); overflow-y:auto; }
+	.cs-option { padding:.7rem 1rem; cursor:pointer; transition:background .15s; font-size:.95rem; border-bottom:1px solid #f1f5f9; }
+	.cs-option:last-child { border-bottom:none; }
+	.cs-option:hover { background:#EFF6FF; color:#1D4ED8; }
+	.risk-btn { display:flex; flex-direction:column; align-items:center; gap:2px; padding:.4rem .6rem; border:2px solid #e5e7eb; border-radius:.75rem; cursor:pointer; transition:all .2s; min-width:3.5rem; text-align:center; background:#fff; }
+	.risk-btn:hover { border-color:#93C5FD; }
+</style>
 
-                    @if (session('success'))
-                        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
-                            <p>{{ session('success') }}</p>
-                        </div>
-                    @endif
+	<main class="max-w-4xl mx-auto py-10 px-6">
+		<div class="flex justify-between items-center mb-10">
+			<h1 class="text-3xl font-extrabold text-blue-700 tracking-tight">Encuesta sobre la vivienda</h1>
+			<span class="text-gray-600 bg-gray-100 px-4 py-2 rounded-full text-sm font-semibold" id="welcome-name">Bienvenido</span>
+			<a href="{{ route('admin.dashboard') }}" class="text-white bg-blue-500 px-4 py-2 rounded-full text-sm font-semibold ml-2">Admin Dashboard</a>
+		</div>
+		
+		<form id="inspection-form" action="{{ route('survey.store') }}" method="POST" class="bg-white shadow-2xl rounded-3xl p-8 border border-gray-100" x-data="formData()" @submit.prevent="submitForm()">
+            @csrf
+			<input type="hidden" name="inspector_nombre" :value="userName" />
+			<input type="hidden" name="inspector_email" :value="userEmail" />
 
-                    <form action="{{ route('survey.store') }}" method="POST" class="max-w-xl mx-auto text-left">
-                        @csrf
-                        <div class="mb-4">
-                            <label for="inspector_nombre" class="block text-sm font-medium text-gray-700">Nombre del Inspector</label>
-                            <input type="text" name="inspector_nombre" id="inspector_nombre" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                        </div>
-                        <div class="mb-4">
-                            <label for="inspector_email" class="block text-sm font-medium text-gray-700">Email</label>
-                            <input type="email" name="inspector_email" id="inspector_email" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                        </div>
-                        
-                        <div class="mt-6">
-                            <button type="submit" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">
-                                Enviar Autoevaluación
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+			<!-- ===== SECTION 1: Registro ===== -->
+			<div class="mb-10 border-b pb-8">
+				<h2 class="section-title">1. Registro</h2>
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+					<div>
+						<label class="field-label">1.1 Tipo de Vivienda</label>
+						<input type="hidden" name="tipo_vivienda" x-model="tipoVivienda" />
+						<div class="relative">
+							<button type="button" @click="toggleDd('tipoVivienda')" class="cs-trigger" :class="openDd==='tipoVivienda'&&'cs-trigger-active'">
+								<span x-text="tipoViviendaLabel" :class="!tipoVivienda&&'text-gray-400'"></span>
+								<svg class="cs-arrow" :class="openDd==='tipoVivienda'&&'rotate-180'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+							</button>
+							<div class="cs-list" :class="openDd==='tipoVivienda'?'cs-list-open':''">
+								<template x-for="o in [{v:'Propia'},{v:'Alquilada'},{v:'Otras'}]"><div class="cs-option" @click="sel('tipoVivienda',o.v,o.v)" x-text="o.v"></div></template>
+							</div>
+						</div>
+					</div>
+					<div>
+						<label class="field-label">1.2 Plantas</label>
+						<input type="hidden" name="plantas" x-model="plantas" />
+						<div class="relative">
+							<button type="button" @click="toggleDd('plantas')" class="cs-trigger" :class="openDd==='plantas'&&'cs-trigger-active'">
+								<span x-text="plantasLabel" :class="!plantas&&'text-gray-400'"></span>
+								<svg class="cs-arrow" :class="openDd==='plantas'&&'rotate-180'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+							</button>
+							<div class="cs-list" :class="openDd==='plantas'?'cs-list-open':''">
+								<template x-for="n in [1,2,3,4,5,6]"><div class="cs-option" @click="sel('plantas',String(n),String(n))" x-text="n"></div></template>
+							</div>
+						</div>
+					</div>
+					<div>
+						<label class="field-label">1.3 Zona de construcción</label>
+						<input type="hidden" name="zona_construccion" x-model="zonaConstruccion" />
+						<div class="relative">
+							<button type="button" @click="toggleDd('zonaConstruccion')" class="cs-trigger" :class="openDd==='zonaConstruccion'&&'cs-trigger-active'">
+								<span x-text="zonaConstruccionLabel" :class="!zonaConstruccion&&'text-gray-400'"></span>
+								<svg class="cs-arrow" :class="openDd==='zonaConstruccion'&&'rotate-180'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+							</button>
+							<div class="cs-list" :class="openDd==='zonaConstruccion'?'cs-list-open':''">
+								<template x-for="o in [{v:'Urbana'},{v:'Rural'}]"><div class="cs-option" @click="sel('zonaConstruccion',o.v,o.v)" x-text="o.v"></div></template>
+							</div>
+						</div>
+					</div>
+					<div>
+						<label class="field-label">1.4 Fecha</label>
+						<input type="text" name="fecha" :value="new Date().toLocaleDateString('es-PE')" readonly class="cs-input bg-gray-50 text-gray-500 cursor-not-allowed"/>
+					</div>
+					<div>
+						<label class="field-label">1.5 País</label>
+						<input type="text" name="pais" x-model="pais" required class="cs-input" placeholder="Ej: Perú"/>
+					</div>
+					<div :class="pais.toLowerCase().trim()!=='perú'&&pais.toLowerCase().trim()!=='peru'?'opacity-50':''">
+						<label class="field-label">1.6 Región</label>
+						<input type="text" name="region" class="cs-input" :required="pais.toLowerCase().trim()==='perú'||pais.toLowerCase().trim()==='peru'"/>
+					</div>
+					<div :class="pais.toLowerCase().trim()!=='perú'&&pais.toLowerCase().trim()!=='peru'?'opacity-50':''">
+						<label class="field-label">1.7 Provincia</label>
+						<input type="text" name="provincia" class="cs-input" :required="pais.toLowerCase().trim()==='perú'||pais.toLowerCase().trim()==='peru'"/>
+					</div>
+					<div>
+						<label class="field-label">1.8 Grado de estudios concluida</label>
+						<input type="hidden" name="grado_estudios" x-model="gradoEstudios" />
+						<div class="relative">
+							<button type="button" @click="toggleDd('gradoEstudios')" class="cs-trigger" :class="openDd==='gradoEstudios'&&'cs-trigger-active'">
+								<span x-text="gradoEstudiosLabel" :class="!gradoEstudios&&'text-gray-400'"></span>
+								<svg class="cs-arrow" :class="openDd==='gradoEstudios'&&'rotate-180'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+							</button>
+							<div class="cs-list" :class="openDd==='gradoEstudios'?'cs-list-open':''">
+								<template x-for="o in [{v:'Inicial'},{v:'Primaria'},{v:'Superior técnica'},{v:'Superior universitaria'},{v:'Ninguna'}]"><div class="cs-option" @click="sel('gradoEstudios',o.v,o.v)" x-text="o.v"></div></template>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- ===== SECTION 2: Autoevaluación ===== -->
+			<div class="mb-10 border-b pb-8">
+				<h2 class="section-title">2. Autoevaluación</h2>
+				<p class="text-sm text-gray-500 mb-6">Responda cada pregunta con: <strong>0</strong> = No existe el riesgo · <strong>1</strong> = Riesgo leve · <strong>2</strong> = Riesgo moderado · <strong>3</strong> = Riesgo alto</p>
+
+				<template x-for="(sec, si) in sections" :key="si">
+					<div class="mb-8">
+						<div class="flex items-center gap-3 mb-4">
+							<h3 class="text-lg font-bold text-gray-800" x-text="'2.'+(si+1)+' '+sec.title"></h3>
+							<span class="text-xs font-bold px-3 py-1 rounded-full" :class="sectionScore(si)>sec.threshold?'bg-red-100 text-red-700':'bg-green-100 text-green-700'" x-text="'Puntaje: '+sectionScore(si)+'/'+sec.questions.length*3"></span>
+						</div>
+						<div class="space-y-3">
+							<template x-for="(q, qi) in sec.questions" :key="qi">
+								<div class="bg-gray-50 p-4 rounded-2xl border border-gray-200 flex flex-col md:flex-row md:items-center gap-3">
+									<p class="flex-1 text-sm font-medium text-gray-700" x-text="'2.'+(si+1)+'.'+(qi+1)+' '+q"></p>
+									<div class="relative shrink-0 w-52">
+										<button type="button" @click="openRiskDd = openRiskDd===si+'_'+qi ? null : si+'_'+qi" class="cs-trigger text-sm" :class="openRiskDd===si+'_'+qi&&'cs-trigger-active'">
+											<span class="truncate" x-text="answers[si][qi]<0?'Seleccione...':riskOptions[answers[si][qi]].l" :class="answers[si][qi]<0?'text-gray-400':riskLabelColors[answers[si][qi]]"></span>
+											<svg class="cs-arrow" :class="openRiskDd===si+'_'+qi&&'rotate-180'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+										</button>
+										<div class="cs-list" :class="openRiskDd===si+'_'+qi?'cs-list-open':''">
+											<template x-for="opt in riskOptions" :key="opt.v">
+												<div class="cs-option flex items-center gap-2" @click="answers[si][qi]=opt.v; openRiskDd=null">
+													<span class="w-2 h-2 rounded-full shrink-0" :class="riskDotColors[opt.v]"></span>
+													<span x-text="opt.l"></span>
+												</div>
+											</template>
+										</div>
+									</div>
+								</div>
+							</template>
+						</div>
+						<div class="mt-3 p-3 rounded-xl text-sm font-semibold" :class="sectionScore(si)>sec.threshold?'bg-red-50 text-red-700 border border-red-200':'bg-green-50 text-green-700 border border-green-200'">
+							<span x-text="'Resultado: '+sectionScore(si)+' puntos — '+(sectionScore(si)>sec.threshold?sec.warning:'Nivel aceptable')"></span>
+						</div>
+					</div>
+				</template>
+			</div>
+
+			<!-- ===== SECTION 3: Interpretación Final ===== -->
+			<div class="mb-10">
+				<h2 class="section-title">3. Interpretación Final</h2>
+				<div class="bg-gray-50 p-6 rounded-3xl border border-gray-200 space-y-4">
+					<div class="text-center">
+						<p class="text-5xl font-black" :class="totalColor" x-text="totalScore()"></p>
+						<p class="text-lg font-bold mt-1" :class="totalColor" x-text="riskLevel()"></p>
+						<p class="text-sm text-gray-500 mt-1" x-text="riskDiagnosis()"></p>
+					</div>
+					<div class="grid grid-cols-4 gap-2 text-center text-xs mt-4">
+						<div class="p-2 rounded-xl" :class="totalScore()<=20?'bg-green-200 font-bold':'bg-green-50'">0-20<br/>Bajo</div>
+						<div class="p-2 rounded-xl" :class="totalScore()>20&&totalScore()<=40?'bg-yellow-200 font-bold':'bg-yellow-50'">21-40<br/>Moderado</div>
+						<div class="p-2 rounded-xl" :class="totalScore()>40&&totalScore()<=70?'bg-orange-200 font-bold':'bg-orange-50'">41-70<br/>Alto</div>
+						<div class="p-2 rounded-xl" :class="totalScore()>70?'bg-red-200 font-bold':'bg-red-50'">71-105<br/>Crítico</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Hidden fields para enviar scores -->
+			<template x-for="(sec, si) in sections" :key="'h'+si">
+				<input type="hidden" :name="'score_'+sec.key" :value="sectionScore(si)"/>
+			</template>
+			<input type="hidden" name="score_total" :value="totalScore()"/>
+			<input type="hidden" name="nivel_riesgo" :value="riskLevel()"/>
+			<input type="hidden" name="respuestas_json" :value="JSON.stringify(answers)"/>
+
+			<div class="text-center mt-12">
+				<button type="submit" class="bg-blue-600 text-white px-10 py-4 rounded-full font-bold text-xl shadow-lg hover:bg-blue-700 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 w-full md:w-auto">Guardar Inspección</button>
+			</div>
+		</form>
+	</main>
+
+<script>
+window.formData = function() {
+	return {
+		userName: 'Usuario',
+		userEmail: 'correo@ejemplo.com',
+
+		// Section 1
+		tipoVivienda:'', tipoViviendaLabel:'Seleccione...',
+		plantas:'', plantasLabel:'Seleccione...',
+		gradoEstudios:'', gradoEstudiosLabel:'Seleccione...',
+		zonaConstruccion:'', zonaConstruccionLabel:'Seleccione...',
+		pais:'',
+		openDd: null,
+		openRiskDd: null,
+		toggleDd(n) { this.openDd = this.openDd===n ? null : n; },
+		sel(f,v,l) { this[f]=v; this[f+'Label']=l; this.openDd=null; },
+
+		// Section 2 - Risk options
+		riskOptions: [
+			{v:0,l:'No existe el riesgo'},{v:1,l:'Riesgo leve'},{v:2,l:'Riesgo moderado'},{v:3,l:'Riesgo alto'}
+		],
+		riskLabelColors: {
+			0:'text-green-700', 1:'text-yellow-600', 2:'text-orange-600', 3:'text-red-600'
+		},
+		riskDotColors: {
+			0:'bg-green-500', 1:'bg-yellow-500', 2:'bg-orange-500', 3:'bg-red-500'
+		},
+		sections: [
+			{ key:'electrico', title:'Riesgos Eléctricos', threshold:9, warning:'Riesgo serio de incendio.',
+			  questions:['¿Existen cables expuestos, pelados o deteriorados?','¿Usas extensiones o "zapatillas" sobrecargadas?','¿El tablero eléctrico es antiguo o no tiene llaves térmicas?','¿Hay enchufes cerca de zonas húmedas sin protección?','¿Notas chispazos o calentamiento en tomacorrientes?'] },
+			{ key:'incendio', title:'Riesgo de Incendio / Gas', threshold:8, warning:'Hogar vulnerable.',
+			  questions:['¿La manguera de gas tiene más de 5 años?','¿El balón está en un lugar sin ventilación?','¿Cocinas cerca de materiales inflamables?','¿No tienes extintor o detector de humo?','¿Dejas la cocina encendida sin supervisión?'] },
+			{ key:'caidas', title:'Riesgos de Caídas', threshold:7, warning:'Alta probabilidad de accidentes.',
+			  questions:['¿Tus pisos son resbalosos?','¿El baño no tiene alfombra antideslizante?','¿Las escaleras carecen de barandas firmes?','¿Hay objetos que obstaculizan el paso?','¿La iluminación es deficiente en la noche?'] },
+			{ key:'humedad', title:'Humedad, moho y aire', threshold:6, warning:'Ambiente no saludable.',
+			  questions:['¿Observas manchas de moho?','¿Hay filtraciones o goteras?','¿Ventilas poco la casa?','¿Percibes olor constante a humedad?','¿La ropa tarda demasiado en secar dentro de casa?'] },
+			{ key:'estructural', title:'Riesgo Estructural', threshold:6, warning:'Evaluación técnica recomendable.',
+			  questions:['¿La vivienda presenta grietas visibles?','¿Has construido sin asesoría técnica?','¿Hay columnas debilitadas o expuestas?','¿El techo muestra hundimientos?','¿Tienes objetos pesados mal fijados?'] },
+			{ key:'salud', title:'Riesgos para la Salud', threshold:7, warning:'Riesgo sanitario alto.',
+			  questions:['¿Almacenas productos químicos sin control?','¿Medicamentos al alcance de niños?','¿Basura acumulada?','¿Presencia de plagas?','¿Agua almacenada sin tapa?'] },
+			{ key:'infantil', title:'Seguridad Infantil', threshold:5, warning:'Hogar no seguro para menores.',
+			  questions:['¿Enchufes sin protectores?','¿Ventanas sin seguro?','¿Objetos pequeños accesibles?','¿Cocina accesible para niños?','¿Escaleras sin barrera?'] }
+		],
+		answers: Array.from({length:7}, (_,i) => Array.from({length:5}, ()=>-1)),
+
+		sectionScore(i) { return this.answers[i].reduce((a,b)=>a+(b<0?0:b), 0); },
+		totalScore() { return this.answers.flat().reduce((a,b)=>a+(b<0?0:b), 0); },
+		get totalColor() {
+			const t=this.totalScore();
+			if(t<=20) return 'text-green-600'; if(t<=40) return 'text-yellow-600';
+			if(t<=70) return 'text-orange-600'; return 'text-red-600';
+		},
+		riskLevel() {
+			const t=this.totalScore();
+			if(t<=20) return 'Bajo'; if(t<=40) return 'Moderado';
+			if(t<=70) return 'Alto'; return 'Crítico';
+		},
+		riskDiagnosis() {
+			const t=this.totalScore();
+			if(t<=20) return 'Vivienda segura'; if(t<=40) return 'Mejoras recomendadas';
+			if(t<=70) return 'Riesgos importantes'; return 'Intervención urgente';
+		},
+		submitForm() {
+			const hasEmpty = this.answers.flat().some(a => a < 0);
+			if(hasEmpty) { alert('Por favor, responda todas las preguntas de la autoevaluación.'); return; }
+			const form = document.getElementById('inspection-form');
+			form.submit();
+		}
+	};
+};
+</script>
 </x-guest-layout>
